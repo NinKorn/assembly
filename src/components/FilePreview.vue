@@ -23,27 +23,19 @@
 }
 .popover-box {
   position: absolute;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.9);
-  width: 100%;
-  height: 100%;
+  top: 50%;
+  left: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 80%;
+  height: 80%;
   overflow: hidden;
   z-index: 9;
   display: none;
   opacity: 0;
-  // transform: translateY(100%);
+  transform: translate(-50%, -50%);
   &.active {
     display: block;
     animation: boxshow 0.5s ease-in-out 0s forwards;
-  }
-
-  .video-player {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
   }
   .close {
     position: absolute;
@@ -58,7 +50,6 @@
     font-size: 12px;
     color: #ffffff;
   }
-  
 }
 .title {
   cursor: pointer;
@@ -80,99 +71,157 @@
     animation: boxshow 0.5s ease-in-out 0s forwards;
   }
 }
+.file-preview .viewer-transition {
+  width: 80%;
+  height: 80%;
+  margin: 50px auto 0;
+}
 @keyframes boxshow {
-    from {
-      opacity: 0;
-      // transform: translateY(100%);
-    }
-    to {
-      opacity: 1;
-      // transform: translateY(0%);
-    }
+  from {
+    opacity: 0;
+    // transform: translateY(100%);
   }
+  to {
+    opacity: 1;
+    // transform: translateY(0%);
+  }
+}
+.el-dialog {
+  height: 80%;
+  margin: 0 auto;
+  .el-dialog__body {
+    height: 80%;
+  }
+}
+
+.video-player {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+}
 </style>
 <template>
   <div class="file-preview">
     <!-- 图片预览 -->
-    <div class="popover-img" v-if="fileType=='img'">
+    <div class="popover-img"
+         v-if="fileType=='img'">
       <!-- 默认小图 :thumb="url" -->
       <span class="title">{{titleView}}</span>
-      <vue-viewer style="display: inline-block" :thumb="url" :full="url"></vue-viewer>
+      <vue-viewer :thumb="url"
+                  :full="url"></vue-viewer>
     </div>
     <!-- 文件预览 PPT PDF EXCEL WODRD-->
-    <div class="popover-file" v-if="fileType=='file'">
-      <span class="title" @click="open('showFile')"  >{{titleView}}</span>
+    <div class="popover-file"
+         v-if="fileType=='file'">
+      <span class="title"
+            @click="open('showFile')">{{titleView}}</span>
       <!-- <a :href="addressUrl" target="_blank">{{ title }}在线预览</a> -->
-    </div>    
+    </div>
 
     <!-- 视频预览 -->
-    <div class="popover-video" v-if="fileType== 'video'">
-      <span class="title" @click="open('showVideo')">{{titleView}}</span>
+    <div class="popover-video"
+         v-if="fileType== 'video'">
+      <span class="title"
+            @click="open('showVideo')">{{titleView}}</span>
     </div>
 
     <!-- 其它视频格式 -->
-    <div class="popover-file" v-if="fileType=='athorVideo'">
-      <span class="title" @click="open('showAthorVideo')">{{titleView}}</span>
+    <div class="popover-file"
+         v-if="fileType=='athorVideo'">
+      <span class="title"
+            @click="open('showAthorVideo')">{{titleView}}</span>
     </div>
 
     <!-- MP3格式 -->
-    <div class="popover-file" v-if="fileType=='audio'">
-      <span class="title" @click="open('showAudio')">{{titleView}}</span>
+    <div class="popover-file"
+         v-if="fileType=='audio'">
+      <span class="title"
+            @click="open('showAudio')">{{titleView}}</span>
     </div>
 
     <!-- 视频弹出层 -->
-    <div :class="showVideo?'popover-box active':'popover-box'" v-if="fileType== 'video'">
-      <span class="close" @click.stop="close">关闭</span>
-      <video-player
-        class="video-player vjs-custom-skin"
-        ref="videoPlayer"
-        :playsinline="true"
-        style="object-fit:fill"
-        :options="playerOptions"
-        :x5-video-player-fullscreen="true"
-        @pause="onPlayerPause($event)"
-        @play="onPlayerPlay($event)"
-        @fullscreenchange="onFullscreenChange($event)"
-        @click="fullScreen"
-      ></video-player>
-      <!-- <video-player class="video-player vjs-custom-skin"
-                      ref="positiveVideoPlayer"
-                      :playsinline="true"
-                      :options="positivePlayerOptions"
-      ></video-player>-->
-    </div>
+    <el-dialog v-if="fileType== 'video'"
+               :visible.sync="showVideo"
+               width="80%">
+
+      <video-player class="video-player vjs-custom-skin"
+                    ref="videoPlayer"
+                    :playsinline="true"
+                    style="object-fit:fill"
+                    :options="playerOptions"
+                    :x5-video-player-fullscreen="true"
+                    @pause="onPlayerPause($event)"
+                    @play="onPlayerPlay($event)"
+                    @fullscreenchange="onFullscreenChange($event)"
+                    @click="fullScreen"></video-player>
+
+    </el-dialog>
 
     <!-- 文档类型弹出层 -->
-
-    <div :class="showFile?'popover-box active':'popover-box'" v-if="fileType== 'file'">
-      <span class="close" @click.stop="close">关闭</span>
-      <!-- <iframe :src="addressUrl" type="application/x-google-chrome-pdf" width="100%" height="100%" /> -->
-      <embed :src="addressUrl" id="review" style="width:90%; height:100%;" />
-      <!-- </embed> -->
-    </div>
+    <el-dialog v-if="fileType== 'file'"
+               :visible.sync="showFile"
+               width="80%">
+      <embed :src="addressUrl"
+             id="review"
+             style="width:90%; height:100%;" />
+    </el-dialog>
 
     <!-- 其它视频类型 avi、wmv、mov -->
-    <div :class="showAthorVideo?'popover-box active':'popover-box'" v-if="fileType== 'athorVideo'">
-      <span class="close" @click.stop="close">关闭</span>
-      <object id="MediaPlayer" classid="clsid:22D6F312-B0F6-11D0-94AB-0080C74C7E95" width="800" height="600" standby="Loading Windows Media Player components…" type="application/x-oleobject" >
-        <param name="FileName" :value="url">
-        <param name="AutoStart" value="true">
-        <param name="ShowControls" value="true">
-        <param name="BufferingTime" value="2">
-        <param name="ShowStatusBar" value="true">
-        <param name="AutoSize" value="true">
-        <param name="InvokeURLs" value="false">
-        <param name="AnimationatStart" value="1">
-        <param name="TransparentatStart" value="1">
-        <param name="Loop" value="1">
-        <embed type="application/x-mplayer2" :src="url" name="MediaPlayer" autostart="1" showstatusbar="1" showdisplay="1" showcontrols="1" loop="0" videoborder3d="0" pluginspage="http://www.microsoft.com/Windows/MediaPlayer/" width="800" height="600"></embed>
+    <div :class="showAthorVideo?'popover-box active':'popover-box'"
+         v-if="fileType== 'athorVideo'">
+      <span class="close"
+            @click.stop="close">关闭</span>
+      <object id="MediaPlayer"
+              classid="clsid:22D6F312-B0F6-11D0-94AB-0080C74C7E95"
+              width="800"
+              height="600"
+              standby="Loading Windows Media Player components…"
+              type="application/x-oleobject">
+        <param name="FileName"
+               :value="url">
+        <param name="AutoStart"
+               value="true">
+        <param name="ShowControls"
+               value="true">
+        <param name="BufferingTime"
+               value="2">
+        <param name="ShowStatusBar"
+               value="true">
+        <param name="AutoSize"
+               value="true">
+        <param name="InvokeURLs"
+               value="false">
+        <param name="AnimationatStart"
+               value="1">
+        <param name="TransparentatStart"
+               value="1">
+        <param name="Loop"
+               value="1">
+        <embed type="application/x-mplayer2"
+               :src="url"
+               name="MediaPlayer"
+               autostart="1"
+               showstatusbar="1"
+               showdisplay="1"
+               showcontrols="1"
+               loop="0"
+               videoborder3d="0"
+               pluginspage="http://www.microsoft.com/Windows/MediaPlayer/"
+               width="800"
+               height="600">
       </object>
     </div>
 
     <!-- mp3弹出层 -->
-    <div :class="showAudio?'audio active':'audio'" v-if="fileType=='audio'">
-      <span class="close" @click.stop="close">关闭</span>
-        <audio :src="url" :preload="audio.preload" controls="controls"></audio>
+    <div :class="showAudio?'audio active':'audio'"
+         v-if="fileType=='audio'">
+      <span class="close"
+            @click.stop="close">关闭</span>
+      <audio :src="url"
+             :preload="audio.preload"
+             controls="controls"></audio>
     </div>
   </div>
 </template>
@@ -189,7 +238,7 @@ export default {
       type: String
     }
   },
-  data() {
+  data () {
     return {
       value: "",
       titleUrl: "https://view.officeapps.live.com/op/embed.aspx?src=", // 微软 资源必须是公共可访问的
@@ -198,8 +247,8 @@ export default {
       titleView: "",
       showVideo: false, // 视频预览弹出层
       showFile: false, //文件预览弹出层
-      showAthorVideo:false,//其它视频类型
-      showAudio:false,
+      showAthorVideo: false,//其它视频类型
+      showAudio: false,
       playerOptions: {
         //视频插件配置
         playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
@@ -212,9 +261,7 @@ export default {
         fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
         sources: [
           {
-            type: "video/ogg",
-            type: "video/webm",
-            type: "video/mp4",
+            type: "video/mp4" || "video/webm" || "video/ogg",
             src: "" //视频地址
           }
         ],
@@ -241,56 +288,55 @@ export default {
     };
   },
   methods: {
-    open(text){ //打开弹出层
+    open (text) { //打开弹出层
       this[text] = true;
     },
-    close() {//关闭弹出层
+    close () {//关闭弹出层
       this.showVideo = false;
       this.showAthorVideo = false;
       this.showFile = false;
       this.showAudio = false;
     },
-    fullScreen() {
+    fullScreen () {
       const player = this.$refs.videoPlayer.player;
       player.requestFullscreen(); //调用全屏api方法
       player.isFullscreen(true);
       player.play();
     },
-    onPlayerPlay(player) {
+    onPlayerPlay (player) {
       player.play();
     },
-    onPlayerPause() {
+    onPlayerPause () {
       // console.log(player);
     }
   },
   computed: {
-    player() {
+    player () {
       return this.$refs.videoPlayer.player;
     }
   },
   watch: {
     url: {
       immediate: true, // 这句重要
-      handler() {
-        var word = RegExp(/.docx/);
+      handler () {
+        // var word = RegExp(/.docx/);
         var pdf = RegExp(/.pdf/);
-        var ppt = RegExp(/.pptx/);
-        var excel = RegExp(/.xlsx/);
+        // var ppt = RegExp(/.pptx/);
+        // var excel = RegExp(/.xlsx/);
         var img = RegExp(/.img|.jpg|.gif/);
-        // var tif = RegExp(/.tif/);
         var video = RegExp(/.mp4|.webm|.ogg/);
         var athorVideo = RegExp(/.avi|.wmv|.mov/)
         var file = RegExp(/.docx|.pdf|.pptx|.xlsx/);
         var audio = RegExp(/.mp3/);
         if (file.test(this.url)) {// 文本.docx|.pdf|.pptx|.xlsx
           this.fileType = "file";
-            if (pdf.test(this.url)) {
-              this.titleView = this.title ? this.title : "PDF";
-              this.addressUrl = this.url;
-            }else {
-              this.titleView = this.title ? this.title : "文件预览";
-              this.addressUrl = this.titleUrl + this.url;
-            }
+          if (pdf.test(this.url)) {
+            this.titleView = this.title ? this.title : "PDF";
+            this.addressUrl = this.url;
+          } else {
+            this.titleView = this.title ? this.title : "文件预览";
+            this.addressUrl = this.titleUrl + this.url;
+          }
         } else if (img.test(this.url)) {  //图片.img|.jpg|.gif/
           this.fileType = "img";
           this.titleView = this.title ? this.title : "图片 ";
@@ -298,18 +344,17 @@ export default {
           this.fileType = "video";
           this.titleView = this.title ? this.title : "视频 ";
           this.playerOptions.sources[0].src = this.url;
-        }else if(athorVideo.test(this.url)) { //其它视频
+        } else if (athorVideo.test(this.url)) { //其它视频
           this.fileType = "athorVideo";
           this.titleView = this.title ? this.title : "视频 ";
-        }else if(audio.test(this.url)) {
+        } else if (audio.test(this.url)) {
           this.fileType = "audio";
           this.titleView = this.title ? this.title : "MP3 ";
         }
-
-        
       }
     }
   }
 };
 </script>
-// 文件预览 可支持PDF word Excel PPT JPG GIF MP4
+// 文件预览 可支持PDF word Excel PPT JPG GIF MP4 MP3
+// 图片预览 依赖vue2-viewer 视频预览 依赖vue-video-player

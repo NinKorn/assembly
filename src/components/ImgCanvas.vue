@@ -183,8 +183,6 @@ export default {
         
         ctx.rotate((this.rotate * Math.PI) / 180);
         ctx.fillText(this.text, 0, 0);
-        
-        
         ctx.stroke();
         let canvasImg = canvas.toDataURL("image/jpeg");
         // let canvasImg = canvas.toDataURL("image/png");

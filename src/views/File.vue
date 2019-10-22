@@ -2,23 +2,26 @@
   <div class="file">
     <h2>文件预览</h2>
     <div class="pdf">
-      <file-preview :url="ppturl" :title="`PPT`"></file-preview>
+      <file-preview :url="ppturl"
+                    :title="`PPT`"></file-preview>
       <file-preview :url="img"></file-preview>
       <file-preview :url="wordurl"></file-preview>
       <file-preview :url="pdfurl"></file-preview>
       <file-preview :url="excel"></file-preview>
       <file-preview :url="videourl"></file-preview>
-      <file-preview :url="gifurl" :title="`gif图`"></file-preview>
-      <!-- <file-preview :url="`../assets/logo.tif`" :title="`tif图`"></file-preview> -->
-      <file-preview :url="`../assets/logo.avi`" :title="`avi`"></file-preview>
-      <file-preview :url="mp3" :title="`MP3`"></file-preview>
+      <file-preview :url="gifurl"
+                    :title="`gif图`"></file-preview>
+      <file-preview :url="`../assets/logo.avi`"
+                    :title="`avi`"></file-preview>
+      <file-preview :url="mp3"
+                    :title="`MP3`"></file-preview>
     </div>
   </div>
 </template>
 <script>
 import FilePreview from "../components/FilePreview";
 export default {
-  data() {
+  data () {
     return {
       mp3: `https://webfs.yun.kugou.com/201910171527/574f7c1a69aec5818e74940b04ff0849/G164/M07/18/00/5A0DAF1JLquAR_SBAD4H2NEVSKk072.mp3`,
       url: ``,
@@ -34,7 +37,7 @@ export default {
   components: {
     "file-preview": FilePreview
   },
-  mounted() {
+  mounted () {
     // https://view.officeapps.live.com/op/embed.aspx?src= 微软在线服务
     // http://view.officeapps.live.com/op/view.aspx?src=
     // https://docs.google.com/gview?url= 谷歌在线服务
@@ -48,7 +51,7 @@ export default {
     this.gifurl = `http://wx2.sinaimg.cn/mw690/5eef6257gy1fyuaelpqbwg206709tnpd.gif`;
   },
   methods: {
-    lookpdf() {
+    lookpdf () {
       let url = "http://image.cache.timepack.cn/nodejs.pdf"; // 有效 服务器配置跨域处理
       window.open("/static/pdf/web/viewer.html?file=" + url);
     }
@@ -56,7 +59,7 @@ export default {
 };
 </script>
 <style lang="less">
-audio:focus{
+audio:focus {
   outline: none !important;
 }
 </style>
